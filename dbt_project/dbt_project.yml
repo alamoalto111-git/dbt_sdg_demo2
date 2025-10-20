@@ -1,0 +1,18 @@
+name: 'tpch_datavault'
+version: '1.0'
+config-version: 2
+
+profile: 'tpch_datavault_profile'
+model-paths: ["models"]
+macro-paths: ["macros"]
+models:
+  tpch_datavault:
+      staging:
+        +materialized: view
+        +database: TPCH_AG
+      raw_vault:
+        +database: TPCH_AG
+      marts:
+        +schema: marts
+
+
