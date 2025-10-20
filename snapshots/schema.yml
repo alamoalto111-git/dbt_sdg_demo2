@@ -8,8 +8,8 @@ sources:
      - name: orders      
      - name: lineitem
 
-  - name: esquema_snapshot2       # nombre del esquema/logical source
-    database: tpch_ag            # opcional, si tu base de datos no es la default
-    schema: raw_vault           # esquema en Snowflake
+  - name: esquema_snapshot2    # nombre del esquema/logical source
+    database: db_mytest        # opcional, si tu base de datos no es la default
+    schema: sc_test            # esquema en Snowflake
     tables:
       - name: scd2_customers    # nombre de la tabla

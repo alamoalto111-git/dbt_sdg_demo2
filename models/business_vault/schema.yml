@@ -1,0 +1,29 @@
+version: 2
+
+models:
+
+  # ==========================================================
+  # DIM_TIME
+  # ==========================================================
+  - name: dim_calendar
+    description: "Time dimension table generated from TPCH_SF1 order dates."
+    columns:
+      - name: date_key
+        description: "Surrogate key in YYYYMMDD format."
+        tests:
+          - not_null
+          - unique
+      - name: full_date
+        description: "Full calendar date."
+        tests:
+          - not_null
+      - name: year_number
+        description: "Calendar year number."
+      - name: month_number
+        description: "Month number (1-12)."
+      - name: month_name
+        description: "Month name."
+      - name: day_name
+        description: "Day name."
+      - name: is_weekend
+        description: "TRUE if the day is Saturday or Sunday."
