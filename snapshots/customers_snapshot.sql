@@ -1,8 +1,8 @@
 {% snapshot customers_snapshot %}
 {{
   config(
-    target_schema='raw_vault',
-    target_database='tpch_ag',
+    target_schema='sc_mytest',
+    target_database='db_mytest',
     unique_key='id',
     strategy='check',
     check_cols=['name','email']
