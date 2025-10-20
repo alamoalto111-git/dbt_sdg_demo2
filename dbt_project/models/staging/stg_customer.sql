@@ -1,5 +1,5 @@
 {{ config(materialized='view') }}
-with raw as (  select * from SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.CUSTOMER where c_custkey BETWEEN 99998 AND 100100)
+with raw as (  select * from SNOWFLAKE_SAMPLE_DATA_AG.TPCH_SF1.CUSTOMER where c_custkey BETWEEN 99998 AND 100100)
 select
 sha2(concat(c_custkey),256) as hub_customer_sk,
 md5(c_custkey) as hub_customer_skmd,  
