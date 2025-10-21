@@ -1,6 +1,13 @@
 {{ config(materialized='view') }}
-with raw as (select * from SNOWFLAKE_SAMPLE_DATA_AG.TPCH_SF1.ORDERS)
-select  
+
+with raw as (
+    select * from {{ source('tpch_sf1', 'orders') }}
+    where o_orderkey between 4200001 and 4200034
+--SNOWFLAKE_SAMPLE_DATA_AG.TPCH_SF1.ORDERS
+)
+
+select
+    --abs(hash(o_orderkey)) as hub_order_sk,
     o_orderkey::varchar as o_orderkey,
     o_custkey::varchar as o_custkey,
     o_orderstatus as o_orderstatus,  
@@ -11,3 +18,5 @@ select
     o_shippriority as o_shippriority, 
     o_comment as o_comment
 from raw
+
+

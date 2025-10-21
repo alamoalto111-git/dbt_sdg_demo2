@@ -8,7 +8,7 @@ sources:
      - name: orders      
      - name: lineitem
 models:
-  - name: stg_customer
+  - name: stg_customerKKK
     description: "Staging de CUSTOMER"
     columns:      
       - name: c_custkey

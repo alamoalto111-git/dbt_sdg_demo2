@@ -3,19 +3,29 @@
     schema='DATA_MART'
 ) }}
 
+
+-----{{ config(materialized='incremental', unique_key='hub_customer_sk' ) }}
+
+
 -- ==========================================================
 -- DIM_TIME
--- Time dimension generated dynamically from TPCH_SF1 data
+-- Time dimension generated dynamically from 
 -- Author: Alejandra
 -- ==========================================================
 
 with date_range as (
 
-    -- Get min and max order dates from TPC-H
+    -- Get min and max order dates from TPC-H, but including the current date
     select
-        min(o_orderdate) as min_date,
-        max(o_orderdate) as max_date
-    from {{ source('tpch_sf1', 'orders') }}
+        min(o_orderdate)                 as min_date_ord,
+        dateadd(year, -1, min_date_ord)  as min_date,
+        max(o_orderdate)                 as max_date_ord,
+        current_date                     as max_date
+---source('tpch_sf1', 'orders')
+
+    from {{ source('stg_orders_date', 'stg_orders') }}
+
+
 
 ),
 
@@ -23,93 +33,95 @@ dates as (
 
     -- Generate one row per day between min and max
     select
-    dateadd(day, seq4(), min_date) as full_date
-              ---  dateadd(day, n, min_date) as full_date
+      dateadd(day, seq4(), min_date) as full_date
     from date_range,
-        --join numbers on dateadd(day, n, min_date) <= max_date
-        table(generator(rowcount => 10000))
-
-        --- table(generator(rowcount => datediff(day, min_date, max_date) + 1))
-
+      table(generator(rowcount => 15000))
 ),
 
 final as (
 
     select
-        to_number(to_char(full_date, 'YYYYMMDD')) as date_key,
-        full_date,
-        dayofweekiso(full_date) as day_of_week,
-        trim(to_char(full_date, 'FMDay')) as day_name,
+      to_number(to_char(full_date, 'YYYYMMDD')) as date_key,
+      full_date,
 
- ---full_date,
-    to_char(full_date, 'YYYY-MM-DD') as date_str,
-    to_char(full_date, 'YYYY') as year,
-    to_char(full_date, 'MM') as month,
-    to_char(full_date, 'Mon') as month_abbr,
-    to_char(full_date, 'FMDay') as day_name,
-    to_char(full_date, 'D') as day_of_week,
+      to_char(full_date, 'YYYY-MM-DD') as date_str,
+      to_char(full_date, 'YYYY') as year,
+      to_char(full_date, 'MM') as month,
+      to_char(full_date, 'Mon') as month_abbr,
+      trim(to_char(full_date, 'MMMM')) as month_name,
 
+      dayofweekiso(full_date) as day_of_week,
 
+      day(full_date)             as day_of_month_number,
+      TO_CHAR(full_date, 'DD')   as day_of_month_w_zeros,
+      dayofyear(full_date)       as day_of_year,
+      weekiso(full_date)         as week_of_year,
+      month(full_date)           as month_number,
+      year(full_date)            as year_number,
 
-        day(full_date) as day_of_month,
-        dayofyear(full_date) as day_of_year,
-        weekiso(full_date) as week_of_year,
-        month(full_date) as month_number,
-        trim(to_char(full_date, 'Month')) as month_name,
-        quarter(full_date) as quarter_number,
-        concat('Q', quarter(full_date)) as quarter_name,
-        year(full_date) as year_number,
-        case when dayofweekiso(full_date) in (6,7) then true else false end as is_weekend,
-        false as is_holiday,  -- you can enrich later with a holidays table
-        date_trunc('month', full_date) as first_day_of_month,
-        last_day(full_date) as last_day_of_month,
-        date_trunc('quarter', full_date) as first_day_of_quarter,
-        dateadd(day, -1, dateadd(quarter, 1, date_trunc('quarter', full_date))) as last_day_of_quarter,
-        date_trunc('year', full_date) as first_day_of_year,
-        dateadd(day, -1, dateadd(year, 1, date_trunc('year', full_date))) as last_day_of_year,
-        current_timestamp() as created_at
+      quarter(full_date)              as quarter_number,
+      concat('Q', quarter(full_date)) as quarter_name,
+   
+      to_char(full_date, 'DY')   as day_abbr,
+      -- to_char(full_date, 'DYDY') as day_name,
 
-,
+      date_trunc('month', full_date) as first_day_of_month,
+      last_day(full_date) as last_day_of_month,
+      date_trunc('quarter', full_date) as first_day_of_quarter,
+      dateadd(day, -1, dateadd(quarter, 1, date_trunc('quarter', full_date))) as last_day_of_quarter,
+      date_trunc('year', full_date) as first_day_of_year,
+      dateadd(day, -1, dateadd(year, 1, date_trunc('year', full_date))) as last_day_of_year,
 
-        -- Formatos básicos
-        'ALEJANDRA' AS OTROS,
-        to_char(full_date, 'YYYY-MM-DD') as date_str,
-        to_char(full_date, 'YYYY') as year,
-        to_char(full_date, 'Q') as quarter,
-        to_char(full_date, 'MM') as month,
-        to_char(full_date, 'Mon') as month_abbr,
-        to_char(full_date, 'Month') as month_name,
+      -- Flags
+      case when dayofweekiso(full_date) in (6,7) then true else false end as is_weekend,
+      case when dayofweekiso(full_date) in (6)   then true else false end as is_saturday,
+      case when dayofweekiso(full_date) in (7)   then true else false end as is_sunday,
+      false as is_holiday,  -- you can enrich later with a holidays table
 
-        -- Día de semana
-        to_char(full_date, 'D') as day_of_week_num,
-        to_char(full_date, 'DY') as day_abbr,
-        to_char(full_date, 'FMDay') as day_name,
+      -- Combinations
+      to_char(full_date, 'YYYY-MM') as year_month,
+      concat(YEAR,'-Q',quarter(full_date)) as year_quarter,
 
+     --EXTRA
+     TO_CHAR(full_date, 'YYYY') AS year_four_digits,
+     TO_CHAR(full_date, 'YY') AS year_last_two_digits,
+
+     current_timestamp() as created_at
+
+        --to_char(full_date, 'YYYY-MM-DD') as date_str,
+       -- to_char(full_date, 'YYYY') as year,
+       -- to_char(full_date, 'Q') as quarter,
+     --   to_char(full_date, 'MM') as month,
+        --to_char(full_date, 'Mon') as month_abbr,
+        --to_char(full_date, 'Month') as month_name,
+      ---CAST(full_date AS date)  PPPPP,
+      --TO_CHAR(full_date, 'DYDY') AS full_day_of_the_weekSSSS,
+      --TO_CHAR(PPPPP, 'DYDY') AS full_day_of_the_week_PPPPP,
+     --- to_char(full_date, 'DDDD') as day_of_weekUUU,
+     --- to_char(full_date, 'D')    as day_of_week_num,
+         ---to_char(full_date, 'DDD') as day_of_year,
         -- Día / semana / año
-        to_char(full_date, 'DDD') as day_of_year,
-        weekofyear(full_date) as week_of_year,
+      --  to_char(full_date, 'DDD') as day_of_year,
+       -- weekofyear(full_date) as week_of_year,
 
-        -- Indicadores
-        case when to_char(full_date, 'D') in ('1','7') then true else false end as is_weekend,
-        case when to_char(full_date, 'D') = '1' then true else false end as is_sunday,
-        case when to_char(full_date, 'D') = '7' then true else false end as is_saturday,
+            --- trim(to_char(full_date, 'DDDD')) as day_nameVVV,
 
-        -- Combinaciones útiles
-        to_char(full_date, 'YYYY-MM') as year_month,
-        to_char(full_date, 'YYYY-"Q"Q') as year_quarter,
-
-        -- Inicio / fin de mes
-        date_trunc('month', full_date) as month_start_date,
-        last_day(full_date) as month_end_date
-
-
-
-
-
-
+--TO_CHAR(full_date, 'MM') AS month_numb,
+--TO_CHAR(full_date, 'Mon') AS abbreviated_month,    
+--TO_CHAR(full_date, 'MMMM') AS full_month,
+--TO_CHAR(full_date, 'DD') AS day_with_zerosok,
+--TO_CHAR(full_date, 'DY') AS abbreviated_day_of_the_week,
+--TO_CHAR(full_date, 'DYDY') AS full_day_of_the_week,
+     
     from dates
 
 )
 
 select * from final
 order by full_date
+/*
+select 
+    min(full_date) as min_date,
+    max(full_date) as max_date, current_date  from final */
+
+--select * from final where full_date between '2025-01-01' and current_date

@@ -5,14 +5,24 @@ sources:
     schema: TPCH_SF1  
     tables:      
      - name: customer      
-     - name: orders      
      - name: lineitem
+     - name: nation
+     - name: orders
+     - name: part
+     - name: partsupp
+     - name: region
+     - name: supplier
 
-  - name: esquema_snapshot       # nombre del esquema/logical source
-    database: db_test            # opcional, si tu base de datos no es la default
+  - name: esquema_snapshot    # nombre del esquema/logical source
+    database: db_test         # opcional, si tu base de datos no es la default
     schema: sc_test           # esquema en Snowflake
     tables:
       - name: scd2_customers    # nombre de la tabla
+
+
+
+
+
 
 models:
   - name: stg_customer
@@ -22,3 +32,11 @@ models:
         tests:          
           - not_null
           - unique
+
+  - name: stg_orders
+    description: "Staging de ORDERS"
+    columns:      
+      - name: c_orderkey
+        tests:          
+          - not_null
+          - unique          
