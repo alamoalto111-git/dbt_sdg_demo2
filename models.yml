@@ -19,11 +19,6 @@ sources:
     tables:
       - name: scd2_customers    # nombre de la tabla
 
-
-
-
-
-
 models:
   - name: stg_customer
     description: "Staging de CUSTOMER"
@@ -37,6 +32,25 @@ models:
     description: "Staging de ORDERS"
     columns:      
       - name: c_orderkey
+        tests:          
+          - not_null
+          - unique
+
+  - name: stg_lineitem
+    description: "Staging de LINEITEM"
+    columns:      
+      - name: l_orderkey
+        tests:          
+          - not_null
+          #- unique
+      - name: l_linenumber
+        tests:          
+          - not_null                        
+
+  - name: stg_supplier
+    description: "Staging de SUPPLIER"
+    columns:      
+      - name: s_suppkey
         tests:          
           - not_null
           - unique          

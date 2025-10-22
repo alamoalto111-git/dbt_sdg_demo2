@@ -5,13 +5,18 @@ sources:
     schema: TPCH_SF1  
     tables:      
      - name: customer      
-     - name: orders      
      - name: lineitem
-models:
-  - name: stg_customerKKK
-    description: "Staging de CUSTOMER"
-    columns:      
-      - name: c_custkey
-        tests:          
-          - not_null
-          - unique
+     - name: nation
+     - name: orders
+     - name: part
+     - name: partsupp
+     - name: region
+     - name: supplier
+#models:
+#  - name: stg_customerKKK
+#    description: "Staging de CUSTOMER"
+#    columns:      
+#      - name: c_custkey
+#        tests:          
+#          - not_null
+#          - unique
