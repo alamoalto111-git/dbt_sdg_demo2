@@ -5,25 +5,12 @@ with src as (
 ),
 sat as (
   select 
-     --sha2(concat(c_custkey, coalesce(c_name,''), 
-     --coalesce(c_address,'')),256) as sat_customer_pk,    
-     --sha2(concat(c_custkey),256) as hub_customer_sk,
-      abs(hash(c_custkey)) as hub_customer_sk,
-      --coalesce(c_address,'')),256) as sat_customer_pk,
+  
+      {{ dv_hash(['c_custkey']) }} as hub_customer_hk,
 
-      sha2(
-            concat_ws(
-                '||',
-                coalesce(c_name,''),
-                coalesce(c_address,'')
-               -- coalesce(c_nationkey::string,'')
-               -- coalesce(c_phone,''),
-                --coalesce(c_acctbal::string,''),
-                --coalesce(c_mktsegment,''),
-                --coalesce(c_comment,'')
-            ),256
-        ) as sat_customer_pk, --hashdiff,
-        
+      --hashdiff
+      {{ dv_hash(['c_name','c_address','c_nationkey','c_phone','c_acctbal','c_mktsegment','c_comment']) }} as sat_customer_pk,
+
       c_name,    
       c_address,
       c_nationkey,    
@@ -31,7 +18,7 @@ sat as (
       c_acctbal,    
       c_mktsegment,    
       c_comment, 
-      --'stg_customer' as record_source, 
+
      '{{ ref('stg_customer') }}'          as record_source,
      '{{ ref('stg_customer').name }}'     as record_source_md,
      '{{ ref('stg_customer').schema }}'   as record_source_sc,

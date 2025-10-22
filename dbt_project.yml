@@ -10,9 +10,21 @@ models:
       staging:
         +materialized: view
         +database: DWH_SDG_DEMO
+        +schema: RAW_VAULT
       raw_vault:
         +database: DWH_SDG_DEMO
-      marts:
+        +schema: RAW_VAULT
+      business_vault:
+        +database: DWH_SDG_DEMO
+        +schema: BUSINESS_VAULT
+      data_mart:
+        +database: DWH_SDG_DEMO
         +schema: DATA_MART
+        +materialized: table
+      raw_vault_snapshots:
+        +database: DWH_SDG_DEMO
+        +schema: raw_vault_snapshots
+  
+#generate_schema_name: "{{ schema | trim }}"
 
 

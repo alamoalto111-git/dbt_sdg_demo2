@@ -1,5 +1,5 @@
 {{ config(
-    materialized='table',
+    materialized='incremental',
     schema='DATA_MART'
 ) }}
 
@@ -17,16 +17,12 @@ with date_range as (
 
     -- Get min and max order dates from TPC-H, but including the current date
     select
-        min(o_orderdate)                 as min_date_ord,
+        min(o_orderdate)                 as min_date_ord_old,
+        '1991-01-01'                     as min_date_ord,
         dateadd(year, -1, min_date_ord)  as min_date,
         max(o_orderdate)                 as max_date_ord,
         current_date                     as max_date
----source('tpch_sf1', 'orders')
-
     from {{ source('stg_orders_date', 'stg_orders') }}
-
-
-
 ),
 
 dates as (
@@ -88,32 +84,7 @@ final as (
 
      current_timestamp() as created_at
 
-        --to_char(full_date, 'YYYY-MM-DD') as date_str,
-       -- to_char(full_date, 'YYYY') as year,
-       -- to_char(full_date, 'Q') as quarter,
-     --   to_char(full_date, 'MM') as month,
-        --to_char(full_date, 'Mon') as month_abbr,
-        --to_char(full_date, 'Month') as month_name,
-      ---CAST(full_date AS date)  PPPPP,
-      --TO_CHAR(full_date, 'DYDY') AS full_day_of_the_weekSSSS,
-      --TO_CHAR(PPPPP, 'DYDY') AS full_day_of_the_week_PPPPP,
-     --- to_char(full_date, 'DDDD') as day_of_weekUUU,
-     --- to_char(full_date, 'D')    as day_of_week_num,
-         ---to_char(full_date, 'DDD') as day_of_year,
-        -- Día / semana / año
-      --  to_char(full_date, 'DDD') as day_of_year,
-       -- weekofyear(full_date) as week_of_year,
-
-            --- trim(to_char(full_date, 'DDDD')) as day_nameVVV,
-
---TO_CHAR(full_date, 'MM') AS month_numb,
---TO_CHAR(full_date, 'Mon') AS abbreviated_month,    
---TO_CHAR(full_date, 'MMMM') AS full_month,
---TO_CHAR(full_date, 'DD') AS day_with_zerosok,
---TO_CHAR(full_date, 'DY') AS abbreviated_day_of_the_week,
---TO_CHAR(full_date, 'DYDY') AS full_day_of_the_week,
-     
-    from dates
+from dates
 
 )
 
