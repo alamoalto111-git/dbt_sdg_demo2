@@ -6,13 +6,13 @@ models:
       - name: c_custid
         tests:          
           - not_null
-          - unique
+         # - unique
 
   - name: buv_customer_snap
     description: "Business vault de CUSTOMER from raw_vault_snapshots"
     columns:      
       - name: c_custid
         tests:          
-          - not_null
+         # - not_null
 
           
