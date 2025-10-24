@@ -6,8 +6,8 @@ with raw as (
 )
 
 select  
-    l_orderkey,--::varchar as l_orderkey,  
-    l_linenumber,--::varchar as l_linenumber,  
+    l_orderkey, 
+    l_linenumber, 
     l_partkey,--::varchar as l_partkey,  
     l_suppkey,--::varchar as l_suppkey,  
     l_quantity,--::numeric as l_quantity,  

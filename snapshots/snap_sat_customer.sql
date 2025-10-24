@@ -15,7 +15,9 @@ select
     s.c_address,
     s.c_nationkey,
     s.c_phone,
+    s.c_acctbal,  
     s.c_mktsegment,
+    s.c_comment,
     s.load_date,
     s.record_source
 from    {{ source('snapshots','sat_customer') }}  s

@@ -5,9 +5,9 @@ with src as (
 ),
 hub as (  
   select
-    {{ dv_hash(['c_custkey']) }} as hub_customer_hk,    
-     c_custkey           as business_key,    
-     'CUSTOMER'          as entity_name,
+    {{ dv_hash(['c_custkey']) }}          as hub_customer_hk,    
+     c_custkey                            as business_key,    
+     SUBSTR('{{ ref('stg_customer').name }}',5) as entity_name,
      '{{ ref('stg_customer') }}'          as record_source,
      '{{ ref('stg_customer').name }}'     as record_source_md,
      '{{ ref('stg_customer').schema }}'   as record_source_sc,
