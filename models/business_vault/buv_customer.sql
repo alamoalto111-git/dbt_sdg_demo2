@@ -10,9 +10,8 @@ with hub as (
 
 sat as (
     select
-     -- s.hub_customer_hk,
+      s.hub_customer_hk,
       sat_customer_pk,
-     -- business_key as c_custid,
       c_name,
       c_acctbal,
       c_mktsegment,
