@@ -5,7 +5,7 @@ with src as (
 ),
 hub as (  
   select    
-     {{ dv_hash(['o_orderkey']) }} as hub_order_hk,
+     {{ dv_hash(['o_orderkey']) }}      as hub_order_hk,
      --abs(hash(o_orderkey)) as hub_order_sk,
      --sha2(concat(o_orderkey),256) as hub_order_sk,
      --md5(o_orderkey) as hub_order_skmd,     
@@ -23,6 +23,3 @@ select * from hub
 {% if is_incremental() %}
 where hub_order_hk not in (select hub_order_hk from {{ this }})
 {% endif %}
-
-
-

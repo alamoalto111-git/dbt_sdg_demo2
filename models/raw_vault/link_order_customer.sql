@@ -1,9 +1,7 @@
 {{ config(materialized='incremental', unique_key='link_order_customer_hk') }}
-
 with src as (  
     select o_orderkey, o_custkey from {{ ref('stg_orders') }}
 ),
-
 link as (  
   select   
     {{ dv_hash(['o_orderkey','o_custkey']) }} as link_order_customer_hk,    

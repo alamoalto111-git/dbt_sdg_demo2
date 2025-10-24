@@ -25,9 +25,6 @@ sat as (
         'l_shipmode',
         'l_comment' ]) }} as sat_lineitem_pk,
 
-
-
-
        /* l_orderkey,
         l_partkey,
         l_suppkey,
@@ -46,8 +43,6 @@ sat as (
         l_comment,
         ---lower(md5(concat(l_partkey,'|',l_suppkey,'|',l_linenumber,'|',l_quantity,'|',l_extendedprice,'|',l_discount,'|',l_tax))) as lineitem_hashdiff,
        
-
- 
 
      '{{ ref('stg_orders') }}'          as record_source,
      '{{ ref('stg_orders').name }}'     as record_source_md,
