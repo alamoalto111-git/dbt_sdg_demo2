@@ -6,10 +6,6 @@ with src as (
 
 link as (  
   select   
-    /*sha2(concat(o_orderkey, o_custkey),256) as link_order_customer_sk,    
-    sha2(concat(o_orderkey),256) as hub_order_sk,    
-    sha2(concat(o_custkey),256) as hub_customer_sk,*/
-
     {{ dv_hash(['o_orderkey','o_custkey']) }} as link_order_customer_hk,    
     {{ dv_hash(['o_orderkey']) }} as hub_order_hk,
     {{ dv_hash(['o_custkey']) }}  as hub_customer_hk,
@@ -17,13 +13,12 @@ link as (
     '{{ ref('stg_orders') }}'          as record_source,
     current_timestamp() as load_date    
     
-    --'stg_orders' as record_source  
-from src  
-group by o_orderkey, o_custkey)
+  from src  
+  group by o_orderkey, o_custkey)
 
 select
   * 
 from 
   link{% if is_incremental() %}
 where 
-  link_order_customer_sk not in (select link_order_customer_sk from {{ this }}){% endif %}
+  link_order_customer_hk not in (select link_order_customer_hk from {{ this }}){% endif %}

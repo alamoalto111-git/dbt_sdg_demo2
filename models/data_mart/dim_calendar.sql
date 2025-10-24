@@ -1,11 +1,4 @@
-{{ config(
-    materialized='incremental',
-    schema='DATA_MART'
-) }}
-
-
------{{ config(materialized='incremental', unique_key='hub_customer_sk' ) }}
-
+{{ config(materialized='incremental', unique_key='date_key' ) }}
 
 -- ==========================================================
 -- DIM_TIME

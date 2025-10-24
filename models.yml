@@ -42,7 +42,6 @@ models:
       - name: l_orderkey
         tests:          
           - not_null
-          #- unique
       - name: l_linenumber
         tests:          
           - not_null                        
@@ -53,4 +52,38 @@ models:
       - name: s_suppkey
         tests:          
           - not_null
-          - unique          
+          - unique
+
+  - name: stg_part
+    description: "Staging de PART"
+    columns:      
+      - name: p_partkey
+        tests:          
+          - not_null
+          - unique
+
+  - name: stg_partsupp
+    description: "Staging de PARTSUPP"
+    columns:      
+      - name: ps_partkey
+        tests:          
+          - not_null
+      - name: ps_suppkey
+        tests:          
+          - not_null    
+
+  - name: stg_nation
+    description: "Staging de NATION"
+    columns:      
+      - name: n_nationtkey
+        tests:          
+          - not_null
+          - unique
+
+  - name: stg_region
+    description: "Staging de REGION"
+    columns:      
+      - name: r_regiontkey
+        tests:          
+          - not_null
+          - unique 

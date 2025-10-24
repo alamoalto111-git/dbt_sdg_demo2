@@ -1,0 +1,18 @@
+version: 2
+models:
+  - name: buv_customer
+    description: "Business vault de CUSTOMER from raw_vault"
+    columns:      
+      - name: c_custid
+        tests:          
+          - not_null
+          - unique
+
+  - name: buv_customer_snap
+    description: "Business vault de CUSTOMER from raw_vault_snapshots"
+    columns:      
+      - name: c_custid
+        tests:          
+          - not_null
+
+          
