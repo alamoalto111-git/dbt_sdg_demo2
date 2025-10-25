@@ -12,7 +12,7 @@ sat as (
       {{ dv_hash(['ps_suppkey',
                   'ps_availqty',
                   'ps_supplycost',
-                 'ps_comment' ]) }} as sat_part_supplier_pk,
+                  'ps_comment' ]) }} as sat_part_supplier_pk,
 
        ps_availqty,
        ps_supplycost,

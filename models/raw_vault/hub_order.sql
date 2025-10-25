@@ -5,10 +5,7 @@ with src as (
 ),
 hub as (  
   select    
-     {{ dv_hash(['o_orderkey']) }}      as hub_order_hk,
-     --abs(hash(o_orderkey)) as hub_order_sk,
-     --sha2(concat(o_orderkey),256) as hub_order_sk,
-     --md5(o_orderkey) as hub_order_skmd,     
+     {{ dv_hash(['o_orderkey']) }}      as hub_order_hk,   
      o_orderkey                         as business_key,    
      'ORDER'                            as entity_name,
      '{{ ref('stg_orders') }}'          as record_source,
