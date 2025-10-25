@@ -4,12 +4,12 @@ with src as (
 ),
 link as (  
   select   
-    {{ dv_hash(['o_orderkey','o_custkey']) }} as link_order_customer_hk,    
+    {{ dv_hash(['o_orderkey','o_custkey']) }} as link_order_customer_hk, 
     {{ dv_hash(['o_orderkey']) }} as hub_order_hk,
     {{ dv_hash(['o_custkey']) }}  as hub_customer_hk,
     
-    '{{ ref('stg_orders') }}'          as record_source,
-    current_timestamp() as load_date    
+    '{{ ref('stg_orders') }}' as record_source,
+    current_timestamp()       as load_date    
     
   from src  
   group by o_orderkey, o_custkey)

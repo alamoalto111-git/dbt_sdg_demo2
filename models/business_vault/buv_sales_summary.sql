@@ -2,27 +2,41 @@
 
 with joined as (
     select
-        so.hub_order_hk,
-        loc.hub_customer_hk
-       -- c.hub_customer_hk,
-     --   s.hub_supplier_hk,
-  ---      li.l_extendedprice * (1 - li.l_discount) as net_sales,
-     ---   li.l_SHIPDATE
-    from {{ ref('sat_order') }} so
-    join {{ ref('link_order_customer') }} loc on so.hub_order_hk = loc.hub_order_hk
+        --  Relaciones entre las entidades
+        lnk_oc.link_order_customer_hk,
+        lnk_oc.hub_order_hk,
+        lnk_oc.hub_customer_hk,
 
-   --- join {{ ref('sat_customer') }} c on c.hub_customer_hk = oc.hub_customer_hk
-    ---join {{ ref('sat_lineitem') }} li on li.hub_order_hk = o.hub_order_hk
+        lnk_ol.link_order_lineitem_hk,
+
+        --  Atributos del cliente
+        sat_c.c_name,
+        sat_c.c_mktsegment,
+ 
+        --  Atributos de la línea
+        sat_ol.l_linenumber,
+        sat_ol.l_extendedprice,
+        sat_ol.l_discount,
+        sat_ol.l_extendedprice * (1 - sat_ol.l_discount) as net_sales,
+        sat_ol.l_shipdate
+
+    from {{ ref('link_order_customer') }} lnk_oc
+    join {{ ref('sat_customer') }} sat_c
+      on lnk_oc.hub_customer_hk = sat_c.hub_customer_hk
+
+    join {{ ref('link_order_lineitem') }} lnk_ol
+      on lnk_oc.hub_order_hk = lnk_ol.hub_order_hk
+
+    join {{ ref('sat_lineitem') }} sat_ol
+      on lnk_ol.link_order_lineitem_hk = sat_ol.link_order_lineitem_hk
 )
 
----models/business_vault/bv_sales_summary.sql
-
-select
-    hub_customer_hk,
-
-    hub_order_hk
- --   sum(net_sales) as total_sales,
-   -- min(L_SHIPDATE) as first_ship_date,
-    --max(L_SHIPDATE) as last_ship_date
-from joined
---group by customer_hk
+select 
+*
+    /*hub_customer_hk,
+    c_name,
+    sum(net_sales) as total_sales,
+    min(l_shipdate) as first_ship_date,
+    max(l_shipdate) as last_ship_date
+*/ from joined
+--group by hub_customer_hk, c_name

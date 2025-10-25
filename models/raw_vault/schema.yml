@@ -62,7 +62,7 @@ models:
           - relationships:
               arguments:
                 to: ref('hub_customer')
-                field: hubcustomer_hk
+                field: hub_customer_hk
       - name: c_name
         description: "Customer name."
       - name: c_address
@@ -146,7 +146,7 @@ models:
   - name: sat_part
     description: "Satellite containing descriptive attributes for parts, including brand, size, and retail price."
     columns:
-      - name: part_hk
+      - name: hub_part_hk
         description: "Hash key referencing hub_part."
         tests:
           - relationships:
@@ -175,7 +175,7 @@ models:
       - name: record_source
         description: "Source system of the record."
         tests: [not_null]
-  - name: sat_parts_upplier
+  - name: sat_part_supplier
     description: "Satellite for part-supplier relationships containing availability and cost details."
     columns:
       - name: link_part_supplier_hk
@@ -197,6 +197,7 @@ models:
       - name: record_source
         description: "Indicates the source system of the record."
         tests: [not_null]
+
   - name: sat_lineitem
     description: "Satellite storing descriptive and transactional details for line items. Tracks pricing, quantity, and delivery info per line."
     columns:
@@ -254,12 +255,14 @@ models:
               arguments:
                 to: ref('hub_order')
                 field: hub_order_hk
+
       - name: hub_customer_hk
         tests:
           - relationships:
               arguments:
                 to: ref('hub_customer')
                 field: hub_customer_hk
+
   - name: link_part_supplier
     description: "Link connecting part and suppliers through partsupp data."
     columns:
@@ -270,18 +273,19 @@ models:
           - relationships:
               arguments:
                 to: ref('hub_part')
-                field: hub_part_hk
+                field: hub_part_hk               
       - name: hub_supplier_hk
         tests:
           - relationships:
               arguments:
                 to: ref('hub_supplier')
                 field: hub_supplier_hk
+                
   - name: link_order_lineitem
     description: "Link table connecting orders and line items from TPCH data."
     columns:
       - name: link_order_lineitem_hk
-        description: "Hash key of the link between order and lineitem."
+        description: "Hash key of the link between order and lineitem, part and supp"
         tests:
           - unique
           - not_null
@@ -293,6 +297,23 @@ models:
               arguments:
                 to: ref('hub_order')
                 field: hub_order_hk
+
+      - name: hub_part_hk
+        description: "Hash key of the part (FK to hub_part)."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('hub_part')
+                field: hub_part_hk
+
+      - name: hub_supplier_hk
+        description: "Hash key of the part (FK to hub_supplier)."
+        tests:
+          - relationships:
+              arguments:
+                to: ref('hub_supplier')
+                field: hub_supplier_hk
+
       - name: load_date
         description: "Load timestamp of the record."
       - name: record_source

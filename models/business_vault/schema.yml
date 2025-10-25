@@ -1,5 +1,8 @@
 version: 2
 models:
+  - name: buv_order_byline
+    description: "Business vault for ORDER_BYLINE from raw_vault"
+  
   - name: buv_customer
     description: "Business vault de CUSTOMER from raw_vault"
     columns:      
@@ -8,11 +11,14 @@ models:
           - not_null
          # - unique
 
+  - name: buv_order_status
+    description: "Business vault for ORDER_STATUS code & descriptions from raw_vault"
+
+
   - name: buv_customer_snap
     description: "Business vault de CUSTOMER from raw_vault_snapshots"
     columns:      
       - name: c_custid
-        tests:          
-         # - not_null
+        #tests:               # - not_null
 
           

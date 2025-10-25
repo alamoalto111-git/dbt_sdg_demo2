@@ -40,3 +40,15 @@ models:
         description: "Day name."
       - name: is_weekend
         description: "TRUE if the day is Saturday or Sunday."
+  - name: dim_order_status
+    description: "Lookup dimension translating order status codes from the Orders table into descriptive text."
+    columns:
+      - name: order_status_code
+        description: "Raw order status code (O = Open, F = Filled, P = Pending)."
+        tests:
+          - unique
+          - not_null
+      - name: order_status_desc
+        description: "Human-readable description of the order status."
+      - name: load_date
+        description: "Timestamp when the record was created in the data mart."        
