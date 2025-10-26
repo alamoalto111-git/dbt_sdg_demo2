@@ -1,11 +1,6 @@
 version: 2
 
-sources:
-  - name: stg_orders_date
-    database: DWH_SDG_DEMO
-    schema: raw_vault
-    tables:
-      - name: stg_orders
+
 
 models:
   - name: dim_customer
@@ -19,7 +14,7 @@ models:
                 to: ref('hub_customer_hk')
                 field: hub_customer_hk
   - name: dim_calendar
-    description: "Time dimension table generated"
+    description: "Calendar dimension table generated"
     columns:
       - name: date_key
         description: "Surrogate key in YYYYMMDD format."

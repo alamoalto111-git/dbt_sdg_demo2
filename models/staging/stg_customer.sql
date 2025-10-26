@@ -4,9 +4,9 @@ with raw as (
     select * from {{ source('tpch_sf1', 'customer') }}
     ---SNOWFLAKE_SAMPLE_DATA_AG.TPCH_SF1.CUSTOMER
     --where c_custkey BETWEEN 99998 AND 100010 --100100
-     where c_custkey in 
-         (select o_custkey from SNOWFLAKE_SAMPLE_DATA_AG.TPCH_SF1.orders
-         where o_orderkey between 4200001 and 4200034) 
+    --2610 where c_custkey in 
+    --2610     (select o_custkey from SNOWFLAKE_SAMPLE_DATA_AG.TPCH_SF1.orders
+     --2610    where o_orderkey between 4200001 and 4200034) 
 
 )
 select

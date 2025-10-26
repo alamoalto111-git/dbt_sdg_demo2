@@ -2,7 +2,7 @@
 
 with raw as (
     select * from {{ source('tpch_sf1', 'orders') }}
-    where o_orderkey between 4200001 and 4200034
+  --2610  where o_orderkey between 4200001 and 4200034
 )
 
 select
