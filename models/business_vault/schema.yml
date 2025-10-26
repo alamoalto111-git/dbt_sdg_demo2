@@ -1,4 +1,15 @@
 version: 2
+
+sources:
+  - name: stg_orders_date
+    database: DWH_SDG_DEMO
+    schema: raw_vault
+    tables:
+      - name: stg_orders
+      
+  - name: buv_calendar
+    description: "Business vault for Calendar  table generated"
+
 models:
   - name: buv_order_byline
     description: "Business vault for ORDER_BYLINE from raw_vault"

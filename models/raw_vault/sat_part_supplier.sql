@@ -6,7 +6,7 @@ with src as (
 sat as (
   select 
   
-      {{ dv_hash(['ps_partkey','ps_suppkey']) }} as hub_part_supplier_hk,
+      {{ dv_hash(['ps_partkey','ps_suppkey']) }} as link_part_supplier_hk,
 
       --hashdiff
       {{ dv_hash(['ps_suppkey',
