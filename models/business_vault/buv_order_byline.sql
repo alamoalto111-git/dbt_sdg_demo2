@@ -59,11 +59,11 @@ base as (
         lnk_oc.hub_customer_hk,
 
         --Claves origen
-        hub_o.business_key  as CLAVE_ORDER,
-        sat_li.l_linenumber as CLAVE_LINENUMBER,
-        hub_p.business_key  as CLAVE_PART,
-        hub_s.business_key  as CLAVE_SUPPLIER,
-        hub_c.business_key  as CLAVE_CUSTOMER,
+        hub_o.business_key  as ORDER_KEY,
+        sat_li.l_linenumber as LINENUMBER_KEY,
+        hub_p.business_key  as PART_KEY,
+        hub_s.business_key  as SUPPLIER_KEY,
+        hub_c.business_key  as CUSTOMER_KEY,
 
         
         -- Fechas y status
@@ -168,4 +168,4 @@ base as (
     */ 
     )
 
-select * from base ---where clave_order = 4200002 --- and CLAVE_LINENUMBER =1
+select * from base ---where order = 4200002 --- and LINENUMBER =1
