@@ -64,7 +64,6 @@ base as (
         hub_p.business_key  as PART_KEY,
         hub_s.business_key  as SUPPLIER_KEY,
         hub_c.business_key  as CUSTOMER_KEY,
-
         
         -- Fechas y status
         sat_o.o_orderdate,
@@ -91,18 +90,13 @@ base as (
         CAST((total_gross_sales - discount_amount) AS NUMBER(18, 2)) as total_net_sales,
         CAST(sat_li.l_tax AS NUMBER(18, 2))                as tax_pct,
         CAST((total_net_sales * tax_pct)  AS NUMBER(18, 2)) as tax_amount,
-
-
-      ---  case when sat_li.l_extendedprice = total_gross_sales then true else false end as check_gross_sales,
-
-
         (total_net_sales + tax_amount)                as total_invoice_amount,
         CAST((unit_cost * quantity) AS NUMBER(18, 2)) as total_cost,
         total_net_sales - total_cost                  as total_gross_profit,
         total_gross_profit / total_net_sales          as total_gross_profit_margin_pct,
-
         case when discount_pct <> 0 then true else false end flag_with_discount ,
         case when tax_pct <> 0 then true else false end flag_with_tax ,
+        ---  case when sat_li.l_extendedprice = total_gross_sales then true else false end as check_gross_sales,
 
 
         -- Comentarios y descripción
