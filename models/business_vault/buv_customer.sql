@@ -53,7 +53,7 @@ agg_orders as (
 )
 
 select
-    h.business_key as c_custkey,
+    h.business_key as bs_customer_key,
     s.c_name,           
     s.c_acctbal,
     s.c_mktsegment,

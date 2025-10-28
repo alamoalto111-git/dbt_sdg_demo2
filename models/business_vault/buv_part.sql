@@ -53,7 +53,7 @@ agg_part as (
 
 select
 
-     h.business_key as p_partkey,
+     h.business_key as bs_part_key,
 
      s.p_name,
      s.p_mfgr,

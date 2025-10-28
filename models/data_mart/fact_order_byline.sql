@@ -1,19 +1,23 @@
 {{ config(materialized='table') }}
 
 select
- LINK_ORDER_LINEITEM_HK
-,HUB_ORDER_HK
-,HUB_PART_HK
-,HUB_SUPPLIER_HK
-,HUB_CUSTOMER_HK
+-- LINK_ORDER_LINEITEM_HK
+--,HUB_ORDER_HK
+--,bv_base.HUB_PART_HK
+--,HUB_SUPPLIER_HK
+--,HUB_CUSTOMER_HK
 
-,ORDER_KEY
-,LINENUMBER_KEY
-,PART_KEY
-,SUPPLIER_KEY
-,CUSTOMER_KEY
+--,ORDER_KEY
+----,LINENUMBER_KEY
+--,PART_KEY
+--SUPPLIER_KEY
+--,CUSTOMER_KEY
 
-
+--surrogate_keys
+  BS_LINENUMBER_KEY AS LINENUMBER_KEY
+ ,dim_order.order_sk
+ ,dim_part.part_sk
+ ,dim_cust.customer_sk
 
 ---dates
 ,bv_cal_1.DATE_KEY AS ORDERDATE_key
@@ -22,12 +26,10 @@ select
 ,bv_cal_4.DATE_KEY AS LINERECEIPTDATE_key
 
 
-,O_ORDERSTATUS as order_status_key
+--,bv_base.O_ORDERSTATUS as order_status_key
 ,L_LINESTATUS as line_status_key
-
 ,L_RETURNFLAG as line_returnflag_key
-,O_TOTALPRICE
---,L_EXTENDEDPRICE
+
 ,QUANTITY
 ,UNIT_COST
 ,UNIT_PRICE
@@ -43,13 +45,14 @@ select
 ,TOTAL_GROSS_PROFIT_MARGIN_PCT
 ,FLAG_WITH_DISCOUNT
 ,FLAG_WITH_TAX
-,L_COMMENT
+
+--,L_COMMENT
 --,CUSTOMER_NAME
 --,SUPPLIER_NAME
 --,PART_NAME
 --,P_BRAND
-,P_TYPE
-,P_CONTAINER
+--,P_TYPE
+--,P_CONTAINER
 
 from {{ ref('buv_order_byline') }} bv_base
 
@@ -65,9 +68,13 @@ from {{ ref('buv_order_byline') }} bv_base
   join  {{ ref('buv_calendar') }}  bv_cal_4
   on bv_base.L_RECEIPTDATE = bv_cal_4.date_ymd
 
+  LEFT JOIN {{ ref('dim_order') }} dim_order
+  ON bv_base.bs_order_key = dim_order.bs_order_key
+
+  LEFT JOIN {{ ref('dim_part') }} dim_part
+  ON bv_base.bs_part_key = dim_part.bs_part_key
+
+  LEFT JOIN {{ ref('dim_customer') }} dim_cust
+  ON bv_base.bs_customer_key = dim_cust.bs_customer_key
 
 
-
-
---join  {{ ref('buv_customer') }}  bv_cust
---on bv_base.HUB_CUSTOMER_HK = bv_cust.HUB_CUSTOMER_HK
