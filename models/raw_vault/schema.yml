@@ -15,7 +15,7 @@ version: 2
 #    - name: scd2_customers    # nombre de la tabla
 
 models:
-#hubs----------------------------------------------------
+  #hubs----------------------------------------------------
   - name: hub_customer
     description: "CUSTOMER Hub"
     columns:
@@ -52,7 +52,7 @@ models:
           - not_null
           - unique
 
-#sat----------------------------------------------------
+  #sat----------------------------------------------------
   - name: sat_customer
     description: "Satellite for customer descriptive attributes from TPCH_SF1. Tracks changes in customer details over time."
     columns:
@@ -241,9 +241,7 @@ models:
         description: "Indicates the source system of the record."
         tests: [not_null]
 
-
-
-#link----------------------------------------------------
+  #link----------------------------------------------------
   - name: link_order_customer
     description: "Link connecting orders and customers."
     columns:
@@ -273,14 +271,14 @@ models:
           - relationships:
               arguments:
                 to: ref('hub_part')
-                field: hub_part_hk               
+                field: hub_part_hk
       - name: hub_supplier_hk
         tests:
           - relationships:
               arguments:
                 to: ref('hub_supplier')
                 field: hub_supplier_hk
-                
+
   - name: link_order_lineitem
     description: "Link table connecting orders and line items from TPCH data."
     columns:
