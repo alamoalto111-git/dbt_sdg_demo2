@@ -15,7 +15,8 @@ with date_range as (
         dateadd(year, -1, min_date_ord)  as min_date,
         max(o_orderdate)                 as max_date_ord,
         current_date                     as max_date
-    from {{ source('stg_orders_date', 'stg_orders') }}
+   --- from llave llave palabra_source('stg_orders_date', 'stg_orders') llave llave
+   from {{ ref('sat_order') }}
 ),
 
 dates as (

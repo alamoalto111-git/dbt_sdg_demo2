@@ -64,7 +64,6 @@ base as (
         hub_p.business_key  as PART_KEY,
         hub_s.business_key  as SUPPLIER_KEY,
         hub_c.business_key  as CUSTOMER_KEY,
-
         
         -- Fechas y status
         sat_o.o_orderdate,
@@ -72,6 +71,7 @@ base as (
         sat_li.l_shipdate,
         sat_li.l_commitdate,
         sat_li.l_receiptdate,
+        
         sat_li.l_returnflag,
         sat_li.l_linestatus,
 
@@ -90,19 +90,13 @@ base as (
         CAST((total_gross_sales - discount_amount) AS NUMBER(18, 2)) as total_net_sales,
         CAST(sat_li.l_tax AS NUMBER(18, 2))                as tax_pct,
         CAST((total_net_sales * tax_pct)  AS NUMBER(18, 2)) as tax_amount,
-
-
-     ---  case when sat_li.l_extendedprice = total_gross_sales then true else false end as check_gross_sales,
-
-
-        (total_net_sales + tax_amount) as total_invoice_amount,
-
-        unit_cost * quantity                 as total_cogs,
-        total_net_sales - total_cogs         as total_gross_profit,
-        total_gross_profit / total_net_sales as total_gross_profit_margin_pct,
-
+        (total_net_sales + tax_amount)                as total_invoice_amount,
+        CAST((unit_cost * quantity) AS NUMBER(18, 2)) as total_cost,
+        total_net_sales - total_cost                  as total_gross_profit,
+        total_gross_profit / total_net_sales          as total_gross_profit_margin_pct,
         case when discount_pct <> 0 then true else false end flag_with_discount ,
         case when tax_pct <> 0 then true else false end flag_with_tax ,
+        ---  case when sat_li.l_extendedprice = total_gross_sales then true else false end as check_gross_sales,
 
 
         -- Comentarios y descripción
@@ -159,10 +153,8 @@ base as (
    ---duda      
    /* join sat_order_current sat_o
         on lnk_ol.hub_order_hk = sat_o.hub_order_hk
-
     join sat_part_current sat_p
         on lnk_ol.hub_part_hk = sat_p.hub_part_hk 
-
     join sat_supplier_current sat_s
         on lnk_ol.hub_supplier_hk = sat_s.hub_supplier_hk 
     */ 

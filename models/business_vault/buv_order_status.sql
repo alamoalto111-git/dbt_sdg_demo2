@@ -2,7 +2,7 @@
 
 select
     distinct
-        o_orderstatus as order_status_code,
+        o_orderstatus as order_status_key,
         case
             when o_orderstatus = 'O' then 'Open Order'
             when o_orderstatus = 'F' then 'Filled / Completed Order'

@@ -1,6 +1,6 @@
 {{ config(materialized='table') }}
 
-with hub as (
+with hub_cust as (
     select
         hub_customer_hk,
         business_key,
@@ -8,9 +8,9 @@ with hub as (
     from {{ ref('hub_customer') }}
 ),
 
-sat as (
+sat_cust_current as (
     select
-      s.hub_customer_hk,
+      hub_customer_hk,
       sat_customer_pk,
       c_name,
       c_acctbal,
@@ -20,15 +20,22 @@ sat as (
       c_phone,
       c_comment,
       true as flag_current,
-      s.load_date
+      load_date
     from 
       {{ ref('sat_customer') }} s--,
-      --hub h
-    --where h.hub_customer_hk = s.hub_customer_hk
     qualify row_number() over (partition by s.hub_customer_hk order by s.load_date desc) = 1
 ),
 
-orders as (
+sat_orders_current as (
+   select * 
+   from 
+     {{ ref('sat_order') }} o
+   qualify row_number() over (partition by hub_order_hk order by load_date desc) = 1
+),
+
+
+
+agg_orders as (
     select
         l.hub_customer_hk,
         count(distinct o.hub_order_hk) as total_orders,
@@ -39,18 +46,14 @@ orders as (
         datediff(year, max(o.o_orderdate), current_date) as years_since_last_order
     from 
        {{ ref('link_order_customer') }} l,
-       (select * 
-        from 
-          {{ ref('sat_order') }} o
-        qualify row_number() over (partition by hub_order_hk order by load_date desc) = 1
-        ) o
+       sat_orders_current o
     where l.hub_order_hk = o.hub_order_hk   
     group by
        l.hub_customer_hk
 )
 
 select
-    h.business_key as c_custid,
+    h.business_key as c_custkey,
     s.c_name,           
     s.c_acctbal,
     s.c_mktsegment,
@@ -91,8 +94,8 @@ select
     s.load_date       as load_date_sat,
     current_timestamp as load_date_bv
 from 
-  hub h
-left join sat s
+  hub_cust h
+left join sat_cust_current s
   on h.hub_customer_hk = s.hub_customer_hk
-left join orders o
+left join agg_orders o
   on h.hub_customer_hk = o.hub_customer_hk  
