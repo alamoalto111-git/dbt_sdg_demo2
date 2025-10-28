@@ -13,18 +13,20 @@ select
 --SUPPLIER_KEY
 --,CUSTOMER_KEY
 
+{{ generate_sk_int(['bv_base.bs_order_key', 'bv_base.bs_part_key', 'BS_LINENUMBER_KEY']) }} AS order_line_sk,
+
 --surrogate_keys
   BS_LINENUMBER_KEY AS LINENUMBER_KEY
  ,dim_order.order_sk
  ,dim_part.part_sk
+ ,dim_sup.supplier_sk
  ,dim_cust.customer_sk
 
 ---dates
-,bv_cal_1.DATE_KEY AS ORDERDATE_key
-,bv_cal_2.DATE_KEY AS LINESHIPDATE_key
-,bv_cal_3.DATE_KEY AS LINECOMMITDATE_key
-,bv_cal_4.DATE_KEY AS LINERECEIPTDATE_key
-
+,dim_cal_1.DATE_SK AS ORDERDATE_SK
+,dim_cal_2.DATE_SK AS LINESHIPDATE_SK
+,dim_cal_3.DATE_SK AS LINECOMMITDATE_SK
+,dim_cal_4.DATE_SK AS LINERECEIPTDATE_SK
 
 --,bv_base.O_ORDERSTATUS as order_status_key
 ,L_LINESTATUS as line_status_key
@@ -56,17 +58,17 @@ select
 
 from {{ ref('buv_order_byline') }} bv_base
 
-  join  {{ ref('buv_calendar') }}  bv_cal_1
-  on bv_base.o_orderdate = bv_cal_1.date_ymd
+  join  {{ ref('dim_calendar') }}  dim_cal_1
+  on bv_base.o_orderdate = dim_cal_1.date_ymd
 
-  join  {{ ref('buv_calendar') }}  bv_cal_2
-  on bv_base.L_SHIPDATE = bv_cal_2.date_ymd
+  join  {{ ref('dim_calendar') }}  dim_cal_2
+  on bv_base.L_SHIPDATE = dim_cal_2.date_ymd
 
-  join  {{ ref('buv_calendar') }}  bv_cal_3
-  on bv_base.L_COMMITDATE = bv_cal_3.date_ymd
+  join  {{ ref('dim_calendar') }}  dim_cal_3
+  on bv_base.L_COMMITDATE = dim_cal_3.date_ymd
 
-  join  {{ ref('buv_calendar') }}  bv_cal_4
-  on bv_base.L_RECEIPTDATE = bv_cal_4.date_ymd
+  join  {{ ref('dim_calendar') }}  dim_cal_4
+  on bv_base.L_RECEIPTDATE = dim_cal_4.date_ymd
 
   LEFT JOIN {{ ref('dim_order') }} dim_order
   ON bv_base.bs_order_key = dim_order.bs_order_key
@@ -77,4 +79,5 @@ from {{ ref('buv_order_byline') }} bv_base
   LEFT JOIN {{ ref('dim_customer') }} dim_cust
   ON bv_base.bs_customer_key = dim_cust.bs_customer_key
 
-
+  LEFT JOIN {{ ref('dim_supplier') }} dim_sup
+  ON bv_base.bs_supplier_key = dim_cust.bs_supplier_key
