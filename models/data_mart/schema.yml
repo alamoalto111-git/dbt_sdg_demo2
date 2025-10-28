@@ -2,15 +2,18 @@ version: 2
 models:
   - name: dim_customer
     description: "Customer dimension generated from business vault"
-    columns:
-      - name: hub_customer_hk
-        description: "Hash key referencing bv customer."
-        tests:
-          - relationships:
-              arguments:
-                to: ref('hub_customer_hk')
-                field: hub_customer_hk
-  
+   # columns:
+    #  - name: hub_customer_hk
+     #   description: "Hash key referencing bv customer."
+      #  tests:
+       #   - relationships:
+        #      arguments:
+         #       to: ref('hub_customer_hk')
+          #      field: hub_customer_hk
+
+  - name: dim_supplier
+    description: "Part dimension generated from business vault"
+
   - name: dim_part
     description: "Part dimension generated from business vault"
 

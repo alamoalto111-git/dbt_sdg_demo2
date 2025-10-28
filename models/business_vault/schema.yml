@@ -30,6 +30,9 @@ models:
   - name: buv_order
     description: "Business vault de ORDER from raw_vault"
 
+  - name: buv_supplier
+    description: "Business vault de SUPPLIER from raw_vault"  
+
   - name: buv_order_status
     description: "Business vault for ORDER_STATUS code & descriptions from raw_vault"
 
