@@ -14,6 +14,9 @@ models:
   - name: dim_part
     description: "Part dimension generated from business vault"
 
+  - name: dim_order
+    description: "Order dimension generated from business vault"
+
   - name: dim_calendar
     description: "Calendar dimension table generated"
     columns:

@@ -7,11 +7,13 @@ with buv as (
 )
 
 select
-    c_custkey, 
+   {{ generate_sk_int(['BS_CUSTOMER_KEY']) }} AS customer_sk,
+    --c_custkey, 
+    BS_CUSTOMER_KEY,
     c_name,           
     c_acctbal,
     c_mktsegment,
-    --c_address,
+    c_address,
     c_nationkey,
     c_phone,
     c_comment,
@@ -27,13 +29,13 @@ select
     ---accout balance--------------------
      id_dim_balance,
      desc_dim_balance,
-
-     hub_customer_hk,
-     sat_customer_pk,
      flag_current,
-     load_date_hub,
-     load_date_sat,
-     load_date_bv,
      current_timestamp as load_date_dim
+     --hub_customer_hk,
+     --sat_customer_pk,
+     --load_date_hub,
+     --load_date_sat,
+     --load_date_bv,
+     
 from 
   buv b

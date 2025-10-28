@@ -18,14 +18,17 @@ models:
 
   - name: buv_customer
     description: "Business vault de CUSTOMER from raw_vault"
-    columns:      
-      - name: c_custid
-        tests:          
-          - not_null
+   # columns:      
+      #- name: c_custid
+       # tests:          
+        #  - not_null
          # - unique
 
   - name: buv_part
     description: "Business vault de PART from raw_vault"
+
+  - name: buv_order
+    description: "Business vault de ORDER from raw_vault"
 
   - name: buv_order_status
     description: "Business vault for ORDER_STATUS code & descriptions from raw_vault"

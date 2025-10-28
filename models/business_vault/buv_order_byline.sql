@@ -58,16 +58,16 @@ base as (
         lnk_ol.hub_supplier_hk,
         lnk_oc.hub_customer_hk,
 
-        --Claves origen
-        hub_o.business_key  as ORDER_KEY,
-        sat_li.l_linenumber as LINENUMBER_KEY,
-        hub_p.business_key  as PART_KEY,
-        hub_s.business_key  as SUPPLIER_KEY,
-        hub_c.business_key  as CUSTOMER_KEY,
-        
+        --Claves business - origen
+        hub_o.business_key  as BS_ORDER_KEY,
+        sat_li.l_linenumber as BS_LINENUMBER_KEY,
+        hub_p.business_key  as BS_PART_KEY,
+        hub_s.business_key  as BS_SUPPLIER_KEY,
+        hub_c.business_key  as BS_CUSTOMER_KEY,
+
         -- Fechas y status
         sat_o.o_orderdate,
-        sat_o.o_orderstatus,
+        --sat_o.o_orderstatus,
         sat_li.l_shipdate,
         sat_li.l_commitdate,
         sat_li.l_receiptdate,
